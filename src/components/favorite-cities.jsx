@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useFavorites } from "@/hooks/use-favorite";
 import { toast } from "sonner";
 
-// No interface — JSX does not use TS types
+// Single Favorite Card
 function FavoriteCityTablet({ id, name, lat, lon, onRemove }) {
   const navigate = useNavigate();
   const { data: weather, isLoading } = useWeatherQuery({ lat, lon });
@@ -18,14 +18,23 @@ function FavoriteCityTablet({ id, name, lat, lon, onRemove }) {
   return (
     <div
       onClick={handleClick}
-      className="relative flex min-w-[250px] cursor-pointer items-center gap-3 rounded-lg border bg-card p-4 pr-8 shadow-sm transition-all hover:shadow-md"
+      className="
+        relative flex min-w-[230px] sm:min-w-[260px] 
+        cursor-pointer items-center gap-3 rounded-lg border
+        bg-card p-4 pr-10 shadow-sm 
+        transition-all hover:shadow-md hover:bg-accent
+      "
       role="button"
       tabIndex={0}
     >
+      {/* Remove Button */}
       <Button
         variant="ghost"
         size="icon"
-        className="absolute right-1 top-1 h-6 w-6 rounded-full p-0 hover:text-destructive-foreground group-hover:opacity-100"
+        className="
+          absolute right-2 top-2 h-6 w-6 rounded-full p-0
+          hover:text-destructive-foreground
+        "
         onClick={(e) => {
           e.stopPropagation();
           onRemove(id);
@@ -35,27 +44,31 @@ function FavoriteCityTablet({ id, name, lat, lon, onRemove }) {
         <X className="h-4 w-4" />
       </Button>
 
+      {/* Weather Loading */}
       {isLoading ? (
         <div className="flex h-8 items-center justify-center">
           <Loader2 className="h-4 w-4 animate-spin" />
         </div>
       ) : weather ? (
         <>
+          {/* Weather Icon + City */}
           <div className="flex items-center gap-2">
             <img
               src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}.png`}
               alt={weather.weather[0].description}
-              className="h-8 w-8"
+              className="h-10 w-10 object-contain"
             />
-            <div>
-              <p className="font-medium">{name}</p>
+            <div className="leading-tight">
+              <p className="font-medium text-sm sm:text-base">{name}</p>
               <p className="text-xs text-muted-foreground">
                 {weather.sys.country}
               </p>
             </div>
           </div>
+
+          {/* Temperature + Condition */}
           <div className="ml-auto text-right">
-            <p className="text-xl font-bold">
+            <p className="text-xl font-bold leading-tight">
               {Math.round(weather.main.temp)}°
             </p>
             <p className="text-xs capitalize text-muted-foreground">
@@ -68,6 +81,7 @@ function FavoriteCityTablet({ id, name, lat, lon, onRemove }) {
   );
 }
 
+// Full List of Favorites
 export function FavoriteCities() {
   const { favorites, removeFavorite } = useFavorites();
 
@@ -77,9 +91,10 @@ export function FavoriteCities() {
 
   return (
     <>
-      <h1 className="text-xl font-bold tracking-tight">Favorites</h1>
+      <h1 className="text-xl font-bold tracking-tight mb-2">Favorites</h1>
+
       <ScrollArea className="w-full pb-4">
-        <div className="flex gap-4">
+        <div className="flex gap-4 pr-2">
           {favorites.map((city) => (
             <FavoriteCityTablet
               key={city.id}
@@ -88,6 +103,7 @@ export function FavoriteCities() {
             />
           ))}
         </div>
+
         <ScrollBar orientation="horizontal" className="mt-2" />
       </ScrollArea>
     </>

@@ -15,7 +15,7 @@ const CurrentWeather = ({ data, forecastData, locationName }) => {
   const formatTemp = (value) => `${Math.round(value)}°`;
 
   // --------------------------
-  // ✅ Calculate today's Min/Max from forecast
+  // ✅ Today's Min/Max
   // --------------------------
   let todayMin = null;
   let todayMax = null;
@@ -39,15 +39,15 @@ const CurrentWeather = ({ data, forecastData, locationName }) => {
   return (
     <Card className="overflow-hidden">
       <CardContent className="p-6">
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid gap-8 lg:gap-10 md:grid-cols-2">
 
           {/* LEFT SIDE */}
-          <div className="space-y-4">
+          <div className="space-y-6">
 
             {/* Location */}
-            <div className="space-y-2">
-              <div className="flex items-center">
-                <h2 className="text-2xl font-bold tracking-tight">
+            <div className="space-y-1">
+              <div className="flex items-center flex-wrap">
+                <h2 className="text-3xl font-bold tracking-tight">
                   {locationName?.name || cityName}
                 </h2>
 
@@ -64,24 +64,24 @@ const CurrentWeather = ({ data, forecastData, locationName }) => {
             </div>
 
             {/* Temperature */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-4">
               <p className="text-7xl font-bold tracking-tighter">
                 {formatTemp(temp)}
               </p>
 
-              <div className="space-y-1">
+              <div className="space-y-2">
                 <p className="text-sm font-medium text-muted-foreground">
                   Feels like {formatTemp(feels_like)}
                 </p>
 
-                <div className="flex gap-2 text-sm font-medium">
+                <div className="flex gap-4 text-sm font-medium">
                   <span className="flex items-center gap-1 text-blue-500">
-                    <ArrowDown className="h-3 w-3" />
+                    <ArrowDown className="h-4 w-4" />
                     {todayMin !== null ? formatTemp(todayMin) : "--"}
                   </span>
 
                   <span className="flex items-center gap-1 text-red-500">
-                    <ArrowUp className="h-3 w-3" />
+                    <ArrowUp className="h-4 w-4" />
                     {todayMax !== null ? formatTemp(todayMax) : "--"}
                   </span>
                 </div>
@@ -89,18 +89,18 @@ const CurrentWeather = ({ data, forecastData, locationName }) => {
             </div>
 
             {/* Humidity & Wind */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid sm:grid-cols-2 gap-4">
 
-              <div className="flex items-center gap-2">
-                <Droplets className="h-4 w-4 text-blue-500" />
+              <div className="flex items-center gap-3">
+                <Droplets className="h-5 w-5 text-blue-500" />
                 <div className="space-y-0.5">
                   <p className="text-sm font-medium">Humidity</p>
                   <p className="text-sm text-muted-foreground">{humidity}%</p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2">
-                <Wind className="h-4 w-4 text-blue-500" />
+              <div className="flex items-center gap-3">
+                <Wind className="h-5 w-5 text-blue-500" />
                 <div className="space-y-0.5">
                   <p className="text-sm font-medium">Wind Speed</p>
                   <p className="text-sm text-muted-foreground">
@@ -115,14 +115,14 @@ const CurrentWeather = ({ data, forecastData, locationName }) => {
 
           {/* RIGHT SIDE - Weather Icon */}
           <div className="flex flex-col items-center justify-center">
-            <div className="relative flex aspect-square w-full max-w-[200px] items-center justify-center">
+            <div className="relative flex aspect-square w-full max-w-[220px] items-center justify-center">
               <img
                 src={`https://openweathermap.org/img/wn/${currentWeather.icon}@4x.png`}
                 alt={currentWeather.description}
-                className="h-full w-full object-contain"
+                className="h-full w-full object-contain drop-shadow-lg"
               />
-              <div className="absolute bottom-0 text-center">
-                <p className="text-sm font-medium capitalize">
+              <div className="absolute bottom-0 text-center pb-2">
+                <p className="text-sm font-medium capitalize text-muted-foreground">
                   {currentWeather.description}
                 </p>
               </div>

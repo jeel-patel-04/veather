@@ -15,7 +15,7 @@ const WeatherForecast = ({ data }) => {
         temp_min: forecast.main.temp_min,
         temp_max: forecast.main.temp_max,
         humidity: forecast.main.humidity,
-        wind: forecast.wind.speed,
+        wind: forecast.wind.speed, // m/s
         weather: forecast.weather[0],
         date: forecast.dt,
       };
@@ -28,7 +28,7 @@ const WeatherForecast = ({ data }) => {
   }, {});
 
   // Get next 5 days
-  const nextDays = Object.values(dailyForecasts).slice(0, 6);
+  const nextDays = Object.values(dailyForecasts).slice(1, 6);
 
   const formatTemp = (temp) => `${Math.round(temp)}°`;
 
@@ -40,48 +40,57 @@ const WeatherForecast = ({ data }) => {
 
       <CardContent>
         <div className="grid gap-4">
-          {nextDays.map((day) => (
-            <div
-              key={day.date}
-              className="grid grid-cols-3 items-center gap-4 rounded-lg border p-4"
-            >
-              {/* DATE + DESCRIPTION */}
-              <div>
-                <p className="font-medium">
-                  {format(new Date(day.date * 1000), "EEE, MMM d")}
-                </p>
-                <p className="text-sm text-muted-foreground capitalize">
-                  {day.weather.description}
-                </p>
+          {nextDays.map((day) => {
+
+            // Convert m/s → km/h
+            const windKmph = (day.wind * 3.6).toFixed(1);
+
+            return (
+              <div
+                key={day.date}
+                className="
+                  grid gap-4 rounded-lg border p-4 
+                  md:grid-cols-3 md:items-center
+                "
+              >
+                {/* DATE + DESCRIPTION */}
+                <div>
+                  <p className="font-medium">
+                    {format(new Date(day.date * 1000), "EEE, MMM d")}
+                  </p>
+                  <p className="text-sm text-muted-foreground capitalize">
+                    {day.weather.description}
+                  </p>
+                </div>
+
+                {/* MIN & MAX TEMPERATURE */}
+                <div className="flex justify-between md:justify-center gap-6">
+                  <span className="flex items-center text-blue-500">
+                    <ArrowDown className="mr-1 h-4 w-4" />
+                    {formatTemp(day.temp_min)}
+                  </span>
+
+                  <span className="flex items-center text-red-500">
+                    <ArrowUp className="mr-1 h-4 w-4" />
+                    {formatTemp(day.temp_max)}
+                  </span>
+                </div>
+
+                {/* HUMIDITY + WIND */}
+                <div className="flex justify-between md:justify-end gap-6">
+                  <span className="flex items-center gap-1">
+                    <Droplets className="h-4 w-4 text-blue-500" />
+                    <span className="text-sm">{day.humidity}%</span>
+                  </span>
+
+                  <span className="flex items-center gap-1">
+                    <Wind className="h-4 w-4 text-blue-500" />
+                    <span className="text-sm">{windKmph} km/h</span>
+                  </span>
+                </div>
               </div>
-
-              {/* MIN & MAX TEMPERATURE */}
-              <div className="flex justify-center gap-4">
-                <span className="flex items-center text-blue-500">
-                  <ArrowDown className="mr-1 h-4 w-4" />
-                  {formatTemp(day.temp_min)}
-                </span>
-
-                <span className="flex items-center text-red-500">
-                  <ArrowUp className="mr-1 h-4 w-4" />
-                  {formatTemp(day.temp_max)}
-                </span>
-              </div>
-
-              {/* HUMIDITY + WIND */}
-              <div className="flex justify-end gap-4">
-                <span className="flex items-center gap-1">
-                  <Droplets className="h-4 w-4 text-blue-500" />
-                  <span className="text-sm">{day.humidity}%</span>
-                </span>
-
-                <span className="flex items-center gap-1">
-                  <Wind className="h-4 w-4 text-blue-500" />
-                  <span className="text-sm">{(day.wind * 3.6).toFixed(1)} km/h</span>
-                </span>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </CardContent>
     </Card>
