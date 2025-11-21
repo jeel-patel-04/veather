@@ -42,3 +42,11 @@ export function useLocationSearch(query) {
     enabled: query.length >= 3,
   });
 }
+export function useAirQualityQuery(coords) {
+  return useQuery({
+    queryKey: ["air-quality", coords?.lat, coords?.lon],
+    queryFn: () => weatherAPI.getAirQuality(coords),
+    enabled: Boolean(coords?.lat && coords?.lon),
+    refetchOnWindowFocus: false,
+  });
+}

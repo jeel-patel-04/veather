@@ -1,11 +1,17 @@
 import { useParams, useSearchParams } from "react-router-dom";
-import { useWeatherQuery, useForecastQuery } from "@/hooks/use-weather";
+import {
+  useWeatherQuery,
+  useForecastQuery,
+  useAirQualityQuery
+} from "@/hooks/use-weather";
+
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertTriangle } from "lucide-react";
-import  CurrentWeather  from "../components/current-weather";
-import  HourlyTemperature  from "@/components/hourly-temperature";
-import  WeatherDetails  from "../components/weather-details";
-import  WeatherForecast  from "../components/weather-forecast";
+
+import CurrentWeather from "../components/current-weather";
+import HourlyTemperature from "@/components/hourly-temperature";
+import WeatherDetails from "../components/weather-details";
+import WeatherForecast from "../components/weather-forecast";
 import WeatherSkeleton from "../components/loading-skeleton";
 import { FavoriteButton } from "@/components/favorite-button";
 
@@ -18,10 +24,13 @@ export function CityPage() {
 
   const coordinates = { lat, lon };
 
+  // Queries
   const weatherQuery = useWeatherQuery(coordinates);
   const forecastQuery = useForecastQuery(coordinates);
+  const airQuery = useAirQualityQuery(coordinates);
 
-  if (weatherQuery.error || forecastQuery.error) {
+  // Error Handling
+  if (weatherQuery.error || forecastQuery.error || airQuery.error) {
     return (
       <Alert variant="destructive">
         <AlertTriangle className="h-4 w-4" />
@@ -32,7 +41,12 @@ export function CityPage() {
     );
   }
 
-  if (!weatherQuery.data || !forecastQuery.data || !params.cityName) {
+  // Loading state
+  if (
+    !weatherQuery.data ||
+    !forecastQuery.data ||
+    !params.cityName
+  ) {
     return <WeatherSkeleton />;
   }
 
@@ -43,19 +57,23 @@ export function CityPage() {
           {params.cityName}, {weatherQuery.data.sys.country}
         </h1>
 
-        <div className="flex gap-2">
-          <FavoriteButton
-            data={{ ...weatherQuery.data, name: params.cityName }}
-          />
-        </div>
+        <FavoriteButton
+          data={{ ...weatherQuery.data, name: params.cityName }}
+        />
       </div>
 
       <div className="grid gap-6">
-        <CurrentWeather data={weatherQuery.data} />
+        <CurrentWeather data={weatherQuery.data} forecastData={forecastQuery.data} />
+
         <HourlyTemperature data={forecastQuery.data} />
 
         <div className="grid gap-6 md:grid-cols-2 items-start">
-          <WeatherDetails data={weatherQuery.data} />
+          <WeatherDetails
+            data={weatherQuery.data}
+            air={airQuery.data}
+            forecast={forecastQuery.data}
+          />
+
           <WeatherForecast data={forecastQuery.data} />
         </div>
       </div>

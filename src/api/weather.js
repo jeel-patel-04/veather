@@ -58,6 +58,15 @@ class WeatherAPI {
 
     return this.fetchData(url);
   }
+  async getAirQuality({ lat, lon }) {
+  const url = this.createUrl(`${API_CONFIG.BASE_URL}/air_pollution`, {
+    lat: lat.toString(),
+    lon: lon.toString(),
+  });
+
+  return this.fetchData(url);
+}
+
 }
 
 export const weatherAPI = new WeatherAPI();
