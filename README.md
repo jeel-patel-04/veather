@@ -1,4 +1,4 @@
-# 🌤️ Veather — A Modern Weather Intelligence Dashboard
+# 🌤️ Veather — A Visual Weather Dashboard
 *A fast, elegant, and feature-rich weather dashboard built with the latest React ecosystem.*
 
 ---
